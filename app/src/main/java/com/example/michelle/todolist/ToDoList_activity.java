@@ -2,7 +2,7 @@ package com.example.michelle.todolist;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,8 +14,9 @@ import java.util.ArrayList;
 public class ToDoList_activity extends AppCompatActivity {
     private DBhelper dBhelper;
     ListView listView;
-    ArrayAdapter<ToDo> adapter;
-    ArrayList<ToDo> todo_list;
+    ArrayAdapter<ToDo_item> adapter;
+    ArrayList<ToDo_item> todo_list;
+    EditText add_editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +26,29 @@ public class ToDoList_activity extends AppCompatActivity {
         dBhelper = new DBhelper(this);
 
         set_listView();
+
+        add_editText = (EditText)findViewById(R.id.editText);
+
+
+        // Performs action when enter is pressed
+        add_editText.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View view, int keyCode, KeyEvent keyevent) {
+                if ((keyevent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+
+                    String todo_string = add_editText.getText().toString();
+
+                    ToDo_item item = new ToDo_item(todo_string);
+                    dBhelper.create(item);
+
+                    add_editText.setText("");
+                    set_listView();
+
+                    return true;
+                }
+                return false;
+            }
+        });
+
     }
 
     public void set_listView() {
@@ -32,8 +56,7 @@ public class ToDoList_activity extends AppCompatActivity {
         todo_list = dBhelper.read();
 
         // Set adapter
-        adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, todo_list);
+        adapter = new ArrayAdapter<>(this, R.layout.row_layout, R.id.todo_TextView, todo_list);
         listView = (ListView)findViewById(R.id.Todo_listView);
         listView.setAdapter(adapter);
 
@@ -47,18 +70,10 @@ public class ToDoList_activity extends AppCompatActivity {
         });
     }
 
+
+
     public void delete(int pos) {
         dBhelper.delete(adapter.getItem(pos));
-        set_listView();
-    }
-
-    public void add(View view) {
-        EditText editText = (EditText)findViewById(R.id.editText);
-        String todo_string = editText.getText().toString();
-
-        ToDo item = new ToDo(todo_string);
-        dBhelper.create(item);
-
         set_listView();
     }
 }

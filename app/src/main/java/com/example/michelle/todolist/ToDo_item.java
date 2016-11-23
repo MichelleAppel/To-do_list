@@ -5,16 +5,16 @@ package com.example.michelle.todolist;
  * To-do item class
  */
 
-public class ToDo {
-    public String todo_string;
-    public int id;
+class ToDo_item {
+    String todo_string;
+    int id;
 
     // constructor
-    public ToDo(String todo_string) {
+    ToDo_item(String todo_string) {
         this.todo_string = todo_string;
     }
 
-    public ToDo(int id, String todo_string) {
+    ToDo_item(int id, String todo_string) {
         this.todo_string = todo_string;
         this.id = id;
     }

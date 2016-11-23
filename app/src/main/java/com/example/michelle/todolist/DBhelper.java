@@ -13,16 +13,16 @@ import java.util.ArrayList;
  * Database helper
  */
 
-public class DBhelper extends SQLiteOpenHelper {
+class DBhelper extends SQLiteOpenHelper {
     // Set fields of database schema
-    private static final String DATABASE_NAME = "db113.db";
+    private static final String DATABASE_NAME = "DATABASE.db";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE = "todo_table";
 
     private String todoString = "todo_string";
 
     // Constructor
-    public DBhelper(Context context) {
+    DBhelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -45,7 +45,7 @@ public class DBhelper extends SQLiteOpenHelper {
     // CRUD methods
 
     // Create
-    public void create(ToDo item) {
+    void create(ToDo_item item) {
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -56,9 +56,9 @@ public class DBhelper extends SQLiteOpenHelper {
     }
 
     // Read
-    public ArrayList<ToDo> read() {
+    ArrayList<ToDo_item> read() {
         SQLiteDatabase db = getReadableDatabase();
-        ArrayList<ToDo> todo_list = new ArrayList<>();
+        ArrayList<ToDo_item> todo_list = new ArrayList<>();
 
         String query = "SELECT _id , " + todoString + " FROM " + TABLE;
         Cursor cursor = db.rawQuery(query, null);
@@ -67,7 +67,7 @@ public class DBhelper extends SQLiteOpenHelper {
             int id = cursor.getInt(cursor.getColumnIndex("_id"));
             String todo_string = cursor.getString(cursor.getColumnIndex(todoString));
 
-            ToDo item = new ToDo(id, todo_string);
+            ToDo_item item = new ToDo_item(id, todo_string);
             todo_list.add(item);
         }
 
@@ -77,7 +77,7 @@ public class DBhelper extends SQLiteOpenHelper {
     }
 
     // update
-    public void update(ToDo item) {
+    public void update(ToDo_item item) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("id", item.id);
@@ -86,7 +86,7 @@ public class DBhelper extends SQLiteOpenHelper {
     }
 
     // delete
-    public void delete(ToDo item) {
+    void delete(ToDo_item item) {
         int id = item.id;
         SQLiteDatabase db = getWritableDatabase();
         db.delete(TABLE, " _id = ? ", new String[] {String.valueOf(id)});
