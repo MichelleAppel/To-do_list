@@ -21,10 +21,6 @@
         android:inputType="textCapWords"
         android:ems="10"
         android:id="@+id/editText"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
         android:background="@color/colorPrimary"
         android:hint="@string/add_your_to_do"
         android:layout_alignParentLeft="true"
@@ -32,6 +28,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:padding="16dp" />
 
 </RelativeLayout>

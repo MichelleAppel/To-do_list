@@ -15,11 +15,12 @@ import java.util.ArrayList;
 
 class DBhelper extends SQLiteOpenHelper {
     // Set fields of database schema
-    private static final String DATABASE_NAME = "DATABASE.db";
+    private static final String DATABASE_NAME = "todo_database.db";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE = "todo_table";
 
-    private String todoString = "todo_string";
+    private String todo_string = "todo_string";
+    private String is_checked = "is_checked";
 
     // Constructor
     DBhelper(Context context) {
@@ -31,7 +32,7 @@ class DBhelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // Query
         String CREATE_TABLE = "CREATE TABLE " + TABLE + " ( _id INTEGER PRIMARY KEY AUTOINCREMENT , "
-                + todoString + " TEXT )";
+                + todo_string + " TEXT, " + is_checked + " BOOLEAN )";
         db.execSQL(CREATE_TABLE);
     }
 
@@ -49,7 +50,8 @@ class DBhelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(todoString, item.todo_string);
+        values.put(todo_string, item.todo_string);
+        values.put(is_checked, item.is_checked);
 
         db.insert(TABLE, null, values);
         db.close();
@@ -60,14 +62,15 @@ class DBhelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<ToDo_item> todo_list = new ArrayList<>();
 
-        String query = "SELECT _id , " + todoString + " FROM " + TABLE;
+        String query = "SELECT _id , " + todo_string + " , " + is_checked +  " FROM " + TABLE;
         Cursor cursor = db.rawQuery(query, null);
 
         while(cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndex("_id"));
-            String todo_string = cursor.getString(cursor.getColumnIndex(todoString));
+            String todo_string = cursor.getString(cursor.getColumnIndex(this.todo_string));
+            Boolean checked = cursor.getInt(cursor.getColumnIndex(this.is_checked)) > 0;
 
-            ToDo_item item = new ToDo_item(id, todo_string);
+            ToDo_item item = new ToDo_item(id, todo_string, checked);
             todo_list.add(item);
         }
 
@@ -77,19 +80,19 @@ class DBhelper extends SQLiteOpenHelper {
     }
 
     // update
-    public void update(ToDo_item item) {
+    void update(ToDo_item item) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("id", item.id);
-        db.update(TABLE, values, "_id = ? ", new String[] {String.valueOf(item.todo_string)});
+        values.put(is_checked, item.is_checked);
+
+        db.update(TABLE, values, " _id = ? ", new String[] {String.valueOf(item.id)});
         db.close();
     }
 
     // delete
     void delete(ToDo_item item) {
-        int id = item.id;
         SQLiteDatabase db = getWritableDatabase();
-        db.delete(TABLE, " _id = ? ", new String[] {String.valueOf(id)});
+        db.delete(TABLE, " _id = ? ", new String[] {String.valueOf(item.id)});
         db.close();
     }
 }
