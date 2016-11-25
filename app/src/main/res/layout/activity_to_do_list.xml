@@ -18,7 +18,6 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textCapWords"
         android:ems="10"
         android:id="@+id/editText"
         android:background="@color/colorPrimary"
@@ -29,6 +28,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:textColor="@android:color/white"
-        android:padding="16dp" />
+        android:padding="16dp"
+        android:inputType="textCapSentences" />
 
 </RelativeLayout>
